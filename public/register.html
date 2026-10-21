@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar — Hotspot</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --blue:    #3b82f6;
+            --blue-dk: #2563eb;
+            --blue-lt: #93c5fd;
+            --cyan:    #06b6d4;
+            --purple:  #8b5cf6;
+            --bg:      #060612;
+            --surface: #0d0d1f;
+            --border:  rgba(99,179,237,0.1);
+            --border2: rgba(99,179,237,0.18);
+            --text:    #f0f4ff;
+            --muted:   #64748b;
+            --dim:     #374151;
+        }
+
+        html, body { height: 100%; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── LEFT PANEL ── */
+        .panel-left {
+            flex: 1;
+            background: linear-gradient(150deg, #0a0a2e 0%, #060612 60%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 48px 56px;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+        .panel-left::before {
+            content: '';
+            position: absolute;
+            width: 500px; height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%);
+            bottom: -120px; right: -100px;
+            pointer-events: none;
+        }
+        .panel-left::after {
+            content: '';
+            position: absolute;
+            width: 260px; height: 260px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%);
+            top: 60px; left: -60px;
+            pointer-events: none;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .brand-icon {
+            width: 42px; height: 42px;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+        }
+        .brand-name {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #93c5fd, #c4b5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .panel-left-body { position: relative; z-index: 1; }
+        .panel-left-body h2 {
+            font-size: 36px;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.8px;
+            margin-bottom: 16px;
+        }
+        .panel-left-body h2 span {
+            background: linear-gradient(135deg, var(--blue-lt), #c4b5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .panel-left-body > p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.75;
+            max-width: 320px;
+        }
+
+        /* Step indicators */
+        .steps {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding-bottom: 28px;
+            position: relative;
+        }
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 32px;
+            width: 1px;
+            height: calc(100% - 16px);
+            background: rgba(59,130,246,0.2);
+        }
+        .step-num {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: rgba(59,130,246,0.1);
+            border: 1px solid rgba(59,130,246,0.3);
+            color: var(--blue-lt);
+            font-size: 13px;
+            font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .step-body strong {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 3px;
+        }
+        .step-body span { font-size: 12px; color: #4a5568; }
+
+        .panel-left-footer {
+            color: #374151;
+            font-size: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── RIGHT PANEL ── */
+        .panel-right {
+            width: 500px;
+            flex-shrink: 0;
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 48px;
+            min-height: 100vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .panel-right::before {
+            content: '';
+            position: absolute;
+            width: 220px; height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%);
+            bottom: -60px; right: -60px;
+            pointer-events: none;
+        }
+
+        .form-header { margin-bottom: 28px; position: relative; z-index: 1; }
+        .form-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+        .form-header p { color: var(--muted); font-size: 14px; }
+
+        /* 2-col grid */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-group { margin-bottom: 16px; position: relative; z-index: 1; }
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748b;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            margin-bottom: 7px;
+        }
+        .input-wrap { position: relative; }
+        .input-icon {
+            position: absolute;
+            left: 13px; top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px 12px 40px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--text);
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+        .form-group input::placeholder { color: #374151; }
+        .form-group input:focus {
+            border-color: var(--blue);
+            background: rgba(59,130,246,0.05);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, var(--blue), var(--blue-dk));
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(59,130,246,0.35);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        .btn-primary:hover:not(:disabled) {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 28px rgba(59,130,246,0.45);
+        }
+        .btn-primary:active:not(:disabled) { transform: translateY(0); }
+        .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+        .message {
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 14px;
+            display: none;
+            position: relative;
+            z-index: 1;
+        }
+        .message.success { background: rgba(16,185,129,0.1); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+        .message.error   { background: rgba(239,68,68,0.1);  color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+
+        .footer-link {
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .footer-link a {
+            color: var(--blue-lt);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .footer-link a:hover { text-decoration: underline; }
+
+        .loading {
+            display: inline-block;
+            width: 15px; height: 15px;
+            border: 2px solid rgba(255,255,255,0.25);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .match-hint {
+            font-size: 11px;
+            margin-top: 5px;
+            display: none;
+        }
+        .match-hint.ok  { color: #34d399; }
+        .match-hint.err { color: #f87171; }
+
+        @media (max-width: 900px) {
+            .panel-left { display: none; }
+            .panel-right { width: 100%; border-left: none; padding: 40px 24px; }
+            .form-row { grid-template-columns: 1fr; gap: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LEFT PANEL -->
+    <div class="panel-left">
+        <div class="brand">
+            <div class="brand-icon">📶</div>
+            <span class="brand-name">HotspotNet</span>
+        </div>
+
+        <div class="panel-left-body">
+            <h2>Mulai dalam<br><span>3 langkah</span><br>mudah.</h2>
+            <p>Proses registrasi hanya butuh beberapa detik. Setelah disetujui admin, kamu langsung bisa connect.</p>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-body">
+                        <strong>Isi data diri</strong>
+                        <span>Nama, email, dan nomor telepon kamu</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-body">
+                        <strong>Buat akun</strong>
+                        <span>Tentukan username &amp; password yang kuat</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-body">
+                        <strong>Tunggu persetujuan</strong>
+                        <span>Admin akan mereview dan mengaktifkan akun kamu</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-left-footer">© 2026 HotspotNet. All rights reserved.</div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="panel-right">
+        <div class="form-header">
+            <h1>Buat akun baru ✨</h1>
+            <p>Lengkapi form di bawah untuk mendaftar</p>
+        </div>
+
+        <form id="registerForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="name" name="name" required placeholder="Nama lengkap">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>No. Telepon</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">📱</span>
+                        <input type="tel" id="phone" name="phone" required placeholder="08xx-xxxx">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <div class="input-wrap">
+                    <span class="input-icon">✉️</span>
+                    <input type="email" id="email" name="email" required placeholder="contoh@email.com">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Username</label>
+                <div class="input-wrap">
+                    <span class="input-icon">🔖</span>
+                    <input type="text" id="username" name="username" required placeholder="Buat username unik">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" id="password" name="password" required placeholder="Min. 6 karakter">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Konfirmasi</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">🔑</span>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Ulangi password">
+                    </div>
+                    <div class="match-hint" id="matchHint"></div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="submitBtn">
+                <span id="btnText">Daftar Sekarang</span>
+            </button>
+        </form>
+
+        <div class="message" id="message"></div>
+
+        <div class="footer-link">
+            Sudah punya akun? <a href="login.html">Masuk di sini</a>
+        </div>
+    </div>
+
+    <script>
+        // Menggunakan domain Vercel utama secara absolut agar tembus dari MikroTik Captive Portal
+        const BACKEND_URL = 'https://lutpi-2.vercel.app';
+
+        const form = document.getElementById('registerForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const message = document.getElementById('message');
+
+        // Live password match check
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const pw = document.getElementById('password').value;
+            const hint = document.getElementById('matchHint');
+            if (!this.value) { hint.style.display = 'none'; return; }
+            if (this.value === pw) {
+                hint.textContent = '✓ Password cocok';
+                hint.className = 'match-hint ok';
+            } else {
+                hint.textContent = '✗ Password tidak cocok';
+                hint.className = 'match-hint err';
+            }
+            hint.style.display = 'block';
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showMessage('Password tidak cocok!', 'error');
+                return;
+            }
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                username: document.getElementById('username').value,
+                password: password
+            };
+
+            // Show loading
+            submitBtn.disabled = true;
+            btnText.innerHTML = '<span class="loading"></span>';
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage(data.message + ' Mengalihkan ke halaman login...', 'success');
+                    form.reset();
+
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Terjadi kesalahan koneksi ke server backend.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Daftar Sekarang';
+            }
+        });
+
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = `message ${type}`;
+            message.style.display = 'block';
+
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
